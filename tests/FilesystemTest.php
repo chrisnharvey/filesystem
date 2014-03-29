@@ -46,6 +46,33 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         @unlink(__DIR__.'/file.txt');
     }
 
+    public function testTouchFileWithoutTime()
+    {
+        $files = new Filesystem;
+
+        $files->touch(__DIR__.'/file.txt');
+
+        $this->assertTrue(file_exists(__DIR__.'/file.txt'));
+
+        @unlink(__DIR__.'/file.txt');
+    }
+
+    public function testTouchFileWithTime()
+    {
+        $files = new Filesystem;
+
+        $day = rand(1, 10);
+        $time = strtotime("-{$day} day");
+
+        $files->touch(__DIR__.'/file.txt', $time);
+
+        $lastModified = $files->lastModified(__DIR__.'/file.txt');
+
+        $this->assertTrue($lastModified === $time);
+
+        @unlink(__DIR__.'/file.txt');
+    }
+
     public function testDeleteDirectory()
     {
         mkdir(__DIR__.'/foo');
