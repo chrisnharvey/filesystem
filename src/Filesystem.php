@@ -88,6 +88,23 @@ class Filesystem
     }
 
     /**
+     * Touch a file to set access and modifiction time.
+     *
+     * @param  string  $path
+     * @param  string  $time
+     * @param  string  $atime
+     * @return int
+     */
+    public function touch($path, $time = null, $atime = null)
+    {
+        if ($force) {
+            $time ? @touch($file, $time, $atime) : @touch($file);
+        } else {
+            $time ? touch($file, $time, $atime) : touch($file);
+        }
+    }
+
+    /**
      * Append to a file.
      *
      * @param  string  $path
