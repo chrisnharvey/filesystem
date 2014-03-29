@@ -91,8 +91,8 @@ class Filesystem
      * Touch a file to set access and modifiction time.
      *
      * @param  string  $path
-     * @param  string  $time
-     * @param  string  $atime
+     * @param  int  $time
+     * @param  int  $atime
      * @return int
      */
     public function touch($path, $time = null, $atime = null, $force = false)
