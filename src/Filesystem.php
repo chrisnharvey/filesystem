@@ -98,9 +98,9 @@ class Filesystem
     public function touch($path, $time = null, $atime = null, $force = false)
     {
         if ($force) {
-            $time ? @touch($file, $time, $atime) : @touch($file);
+            $time ? @touch($path, $time, $atime) : @touch($path);
         } else {
-            $time ? touch($file, $time, $atime) : touch($file);
+            $time ? touch($path, $time, $atime) : touch($path);
         }
     }
 
