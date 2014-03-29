@@ -1,5 +1,5 @@
 {
-    "name": "encorephp/filesystem",
+    "name": "encore/filesystem",
     "description": "Filesystem package",
     "keywords": ["filesystem"],
     "license": "MIT",
