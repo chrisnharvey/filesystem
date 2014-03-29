@@ -95,7 +95,7 @@ class Filesystem
      * @param  string  $atime
      * @return int
      */
-    public function touch($path, $time = null, $atime = null)
+    public function touch($path, $time = null, $atime = null, $force = false)
     {
         if ($force) {
             $time ? @touch($file, $time, $atime) : @touch($file);
