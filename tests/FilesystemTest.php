@@ -4,12 +4,32 @@ use Encore\Filesystem\Filesystem;
 
 class FilesystemTest extends PHPUnit_Framework_TestCase
 {
+    public function tearDown()
+    {
+        @unlink(__DIR__.'/file.txt');
+        @unlink(__DIR__.'/tmp/nested/baz.txt');
+        @rmdir(__DIR__.'/tmp/nested');
+        @unlink(__DIR__.'/tmp/bar.txt');
+        @unlink(__DIR__.'/tmp/foo.txt');
+        @rmdir(__DIR__.'/tmp');
+
+        @unlink(__DIR__.'/foo/1.txt');
+        @unlink(__DIR__.'/foo/2.txt');
+        @rmdir(__DIR__.'/foo/bar');
+        @rmdir(__DIR__.'/foo');
+
+        @unlink(__DIR__.'/tmp2/nested/baz.txt');
+        @rmdir(__DIR__.'/tmp2/nested');
+        @unlink(__DIR__.'/tmp2/foo.txt');
+        @unlink(__DIR__.'/tmp2/bar.txt');
+        @rmdir(__DIR__.'/tmp2');
+    }
+
     public function testGetRetrievesFiles()
     {
         file_put_contents(__DIR__.'/file.txt', 'Hello World');
         $files = new Filesystem;
         $this->assertEquals('Hello World', $files->get(__DIR__.'/file.txt'));
-        @unlink(__DIR__.'/file.txt');
     }
 
     public function testPutStoresFiles()
@@ -17,7 +37,6 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         $files = new Filesystem;
         $files->put(__DIR__.'/file.txt', 'Hello World');
         $this->assertEquals('Hello World', file_get_contents(__DIR__.'/file.txt'));
-        @unlink(__DIR__.'/file.txt');
     }
 
     public function testDeleteRemovesFiles()
@@ -26,7 +45,6 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         $files = new Filesystem;
         $files->delete(__DIR__.'/file.txt');
         $this->assertFalse(file_exists(__DIR__.'/file.txt'));
-        @unlink(__DIR__.'/file.txt');
     }
 
     public function testPrependExistingFiles()
@@ -35,7 +53,6 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         $files->put(__DIR__.'/file.txt', 'World');
         $files->prepend(__DIR__.'/file.txt', 'Hello ');
         $this->assertEquals('Hello World', file_get_contents(__DIR__.'/file.txt'));
-        @unlink(__DIR__.'/file.txt');
     }
 
     public function testPrependNewFiles()
@@ -43,7 +60,6 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         $files = new Filesystem;
         $files->prepend(__DIR__.'/file.txt', 'Hello World');
         $this->assertEquals('Hello World', file_get_contents(__DIR__.'/file.txt'));
-        @unlink(__DIR__.'/file.txt');
     }
 
     public function testTouchFileWithoutTime()
@@ -53,8 +69,6 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         $files->touch(__DIR__.'/file.txt');
 
         $this->assertTrue(file_exists(__DIR__.'/file.txt'));
-
-        @unlink(__DIR__.'/file.txt');
     }
 
     public function testTouchFileWithTime()
@@ -69,8 +83,6 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         $lastModified = $files->lastModified(__DIR__.'/file.txt');
 
         $this->assertTrue($lastModified === $time);
-
-        @unlink(__DIR__.'/file.txt');
     }
 
     public function testDeleteDirectory()
@@ -91,7 +103,6 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         $files->cleanDirectory(__DIR__.'/foo');
         $this->assertTrue(is_dir(__DIR__.'/foo'));
         $this->assertFalse(file_exists(__DIR__.'/foo/file.txt'));
-        @rmdir(__DIR__.'/foo');
     }
 
     public function testFilesMethod()
@@ -103,10 +114,6 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         $files = new Filesystem;
         $this->assertEquals(array(__DIR__.'/foo/1.txt', __DIR__.'/foo/2.txt'), $files->files(__DIR__.'/foo'));
         unset($files);
-        @unlink(__DIR__.'/foo/1.txt');
-        @unlink(__DIR__.'/foo/2.txt');
-        @rmdir(__DIR__.'/foo/bar');
-        @rmdir(__DIR__.'/foo');
     }
 
     public function testCopyDirectoryReturnsFalseIfSourceIsntDirectory()
@@ -130,18 +137,6 @@ class FilesystemTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(file_exists(__DIR__.'/tmp2/bar.txt'));
         $this->assertTrue(is_dir(__DIR__.'/tmp2/nested'));
         $this->assertTrue(file_exists(__DIR__.'/tmp2/nested/baz.txt'));
-
-        unlink(__DIR__.'/tmp/nested/baz.txt');
-        rmdir(__DIR__.'/tmp/nested');
-        unlink(__DIR__.'/tmp/bar.txt');
-        unlink(__DIR__.'/tmp/foo.txt');
-        rmdir(__DIR__.'/tmp');
-
-        unlink(__DIR__.'/tmp2/nested/baz.txt');
-        rmdir(__DIR__.'/tmp2/nested');
-        unlink(__DIR__.'/tmp2/foo.txt');
-        unlink(__DIR__.'/tmp2/bar.txt');
-        rmdir(__DIR__.'/tmp2');
     }
 
 }
