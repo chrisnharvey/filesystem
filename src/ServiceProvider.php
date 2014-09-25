@@ -16,6 +16,11 @@ class ServiceProvider extends BaseServiceProvider
         $this->container->bind('filesystem', new Filesystem);
     }
 
+    /**
+     * Return a list of bindings that this service provider provides.
+     *
+     * @return array
+     */
     public function provides()
     {
         return ['filesystem'];
